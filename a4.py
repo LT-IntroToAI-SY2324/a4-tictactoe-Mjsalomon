@@ -2,9 +2,6 @@
 # talking about unimplemented class attributes, don't worry about this as you're working
 
 
-from operator import truediv
-
-
 class TTTBoard:
     """A tic tac toe board
 
@@ -12,10 +9,11 @@ class TTTBoard:
         board - a list of '*'s, 'X's & 'O's. 'X's represent moves by player 'X', 'O's
             represent moves by player 'O' and '*'s are spots no one has yet played on
     """
-    def __init__(self):
+
+    def __init__(self) -> None:
         self.board = ['*'] * 9
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = ""
         for x in [0, 3, 6]:
             s += self.board[x + 0] + " " + self.board[x + 1] + " " + self.board[x + 2] + "\n"
@@ -31,52 +29,30 @@ class TTTBoard:
         return True
 
     def has_won(self, player) -> bool:
-        check = player + player + player
-        
-        # Checks horizontal wins
-        for x in [0, 3, 6]:
-            s = ""
-            s += self.board[x + 0] + self.board[x + 1] + self.board[x + 2]
-
-            if check == s:
-                return True
-
-        # Checks vertical wins
-        for x in [0, 1, 2]:
-            s = ""
-            s += self.board[x + 0] + self.board[x + 3] + self.board[x + 6]
-
-            if check == s:
-                return True
-
-        # Checks both diagonal wins
-        s = self.board[0] + self.board[4] + self.board[8]
-        if s == check:
+        """ Check if the given player has won"""
+        ps = [player] * 3 # ['X', 'X', 'X'] or ['O', 'O', 'O']
+        # Horizontal
+        if self.board[:3] == ps or self.board[3:6] == ps or self.board[6:9] == ps:
             return True
-
-        s = self.board[3] + self.board[4] + self.board[6]
-        if s == check:
+        # Vertical
+        if self.board[::3] == ps or self.board[1::3] == ps or self.board[2::3] == ps:
             return True
-        
-        return False
-
-
-    def game_over(self):
-        temp = False
-        for x in range(9):
-            if self.board[x] == "*":
-                break
-            else:
-                temp == True
-
-        if self.has_won("X") == True or self.has_won("O") == True or x == True:
+        # Diagonal
+        if self.board[::4] == ps or self.board[2:7:2] == ps:
             return True
 
         return False
 
+    def game_over(self) -> bool:
+        """Check if the game is over, either because someone has won or the
+        board is full"""
+        if "*" not in self.board or self.has_won("X") or self.has_won("O"):
+            return True
+        return False
 
-    def clear(self):
-        self.board = ["*"] * 9
+    def clear(self) -> None:
+        """Clear the board to reset the game"""
+        self.board = ['*'] * 9
 
 
 def play_tic_tac_toe() -> None:
@@ -127,8 +103,11 @@ if __name__ == "__main__":
     # need to write some more tests to make sure that your TTTBoard class is behaving
     # properly.
     brd = TTTBoard()
+    print(brd.board)
+    print(brd)
     brd.make_move("X", 8)
     brd.make_move("O", 7)
+    print(brd)
 
     assert brd.game_over() == False
 
@@ -136,17 +115,23 @@ if __name__ == "__main__":
     brd.make_move("O", 6)
     brd.make_move("X", 2)
 
+    print(brd)
+
     assert brd.has_won("X") == True
     assert brd.has_won("O") == False
     assert brd.game_over() == True
 
     brd.clear()
 
+    print(brd)
+
     assert brd.game_over() == False
 
     brd.make_move("O", 3)
     brd.make_move("O", 4)
     brd.make_move("O", 5)
+
+    print(brd)
 
     assert brd.has_won("X") == False
     assert brd.has_won("O") == True
@@ -155,4 +140,4 @@ if __name__ == "__main__":
     print("All tests passed!")
 
     # uncomment to play!
-    # play_tic_tac_toe()
+    play_tic_tac_toe()
